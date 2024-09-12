@@ -13,6 +13,13 @@ class ConnectionNotifier(AppletPlugin):
     __author__ = "cschramm"
     __icon__ = "bluetooth-symbolic"
     __description__ = _("Shows desktop notifications when devices get connected or disconnected.")
+    __gsettings__ = {
+        "schema": "org.blueman.plugins.connectionnotifier",
+        "path": None
+    }
+    __options__ = {
+        "enabled": { "type": bool, "default": "True", "name": "Enabled"}
+    }
 
     _notifications: Dict[str, Union[_NotificationBubble, _NotificationDialog]] = {}
 
@@ -23,7 +30,7 @@ class ConnectionNotifier(AppletPlugin):
         del self._battery_watcher
 
     def on_device_property_changed(self, path: str, key: str, value: Any) -> None:
-        if key == "Connected":
+        if key == "Connected" and self.get_option("enabled"):
             device = Device(obj_path=path)
             if value:
                 self._notifications[path] = notification = Notification(
@@ -36,6 +43,8 @@ class ConnectionNotifier(AppletPlugin):
                 Notification(device.display_name, _('Disconnected'), icon_name=device["Icon"]).show()
 
     def _on_battery_update(self, path: str, value: int) -> None:
+        if not self.get_option("enabled"):
+            return None
         notification = self._notifications.pop(path, None)
         if notification:
             try:

@@ -171,6 +171,13 @@
       <description>A list of recently connected devices stored as a dictionary</description>
     </key>
   </schema>
+  <schema id="org.blueman.plugins.connectionnotifier" path="/org/blueman/plugins/connectionnotifier/">
+    <key type="b" name="enabled">
+      <default>true</default>
+      <summary></summary>
+      <description></description>
+    </key>
+  </schema>
   <schema id="org.blueman.transfer" path="/org/blueman/transfer/">
     <key type="b" name="opp-accept">
       <default>false</default>
